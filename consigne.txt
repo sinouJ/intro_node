@@ -1,0 +1,19 @@
+TODO 
+
+App node js + express + moteur de template (au choix)
+
+Composant Header et Footer réutilisez dans toutes les pages => doc du moteur de template
+
+2 Vues :
+    - Home : Afficher tous les users => lien dynamique (avec id)
+    - User : Afficher le user et ses infos (nom prenom age)
+
+Gestion des erreurs (404) => doc express
+
+structure user :
+{
+    id: Int,
+    firstname: String,
+    lastname: String,
+    age: Int
+}
