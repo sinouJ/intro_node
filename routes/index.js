@@ -5,8 +5,10 @@ const thingController = require('../controllers/thingController');
 exports.router = (function() {
     const router = express.Router()
 
-    // router.route('/').get(thingController.thing)
+    router.route('/').get(thingController.user)
     router.route('/users').get(thingController.users)
+
+    router.route('/test').get(thingController.test)
     // router.route('/').get(thingController.index)
 
     return router
