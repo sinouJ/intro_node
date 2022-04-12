@@ -11,7 +11,10 @@ exports.router = (function() {
     router.route('/test').get(thingController.test)
     // router.route('/').get(thingController.index)
 
-    router.route('/thing').get(thingController.thing)
+    router.route('/thing').get(thingController.getThings)
+    router.route('/thing').post(thingController.thing)
+    router.route('/thing').delete(thingController.deleteThings)
+    router.route('/thing/:id').get(thingController.getThingById)
 
     return router
 })()

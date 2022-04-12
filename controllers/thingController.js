@@ -60,8 +60,8 @@ module.exports = {
         })
 
         const Thing = new ThingModel({
-            name: 4,
-            description: 'Deuxième thing',
+            name: req.body.name,
+            description: req.body.description,
             authors: Author._id
         })
 
@@ -86,5 +86,44 @@ module.exports = {
                 })
             }
         })
+    },
+    getThings: (req, res) => {
+        ThingModel.find({}, (err, things) => {
+            if (err) {
+                res.status(500).json({
+                    message: 'Error when getting things',
+                    error: err.message
+                })
+            } else {
+                res.status(200).json({
+                    message: 'Things retrieved',
+                    things
+                })
+            }
+        })
+    },
+    getThingById: (req, res) => {
+        ThingModel.find({}, (err, thing) => {
+            if (err) {
+                res.status(500).json({
+                    message: 'Error when getting thing',
+                    error: err.message
+                })
+            }
+            else {
+                res.status(200).json({
+                    message: 'Thing retrieved',
+                    thing
+                })
+            }
+        })
+    },
+    deleteThings: (req, res) => {
+        ThingModel.deleteMany({ name: req.body.name}, (err, things) => {
+            res.json({
+                things
+            })
+        })
     }
+
 }
