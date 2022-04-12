@@ -11,5 +11,7 @@ exports.router = (function() {
     router.route('/test').get(thingController.test)
     // router.route('/').get(thingController.index)
 
+    router.route('/thing').get(thingController.thing)
+
     return router
 })()
