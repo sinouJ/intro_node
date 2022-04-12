@@ -103,7 +103,7 @@ module.exports = {
         })
     },
     getThingById: (req, res) => {
-        ThingModel.find({}, (err, thing) => {
+        ThingModel.findById(req.params.id, (err, thing) => {
             if (err) {
                 res.status(500).json({
                     message: 'Error when getting thing',
