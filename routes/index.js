@@ -5,14 +5,14 @@ const thingController = require('../controllers/thingController');
 exports.router = (function() {
     const router = express.Router()
 
-    router.route('/').get(thingController.user)
-    router.route('/users').get(thingController.users)
+    // Author
+    router.get('/author', thingController.authors);
+    router.post('/author', thingController.addAuthor);
+    router.get('/author/:id', thingController.author);
 
-    router.route('/test').get(thingController.test)
-    // router.route('/').get(thingController.index)
-
+    // Thing
     router.route('/thing').get(thingController.getThings)
-    router.route('/thing').post(thingController.thing)
+    router.route('/thing').post(thingController.addThing)
     router.route('/thing').delete(thingController.deleteThings)
     router.route('/thing/:id').get(thingController.getThingById)
 

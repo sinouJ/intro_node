@@ -2,105 +2,95 @@ const mongoose = require('mongoose')
 const { ThingModel, AuthorModel } = require('../models/Thing')
 
 module.exports = {
-    user: (req, res) => {
-        var user = 'Jordan'
-        res.status(200).render('index', {
-            user
+    author: (req, res) => {
+        AuthorModel.findById(req.body.id, (err, author) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.render('user', { author })
+            }
         })
     }, 
-    users: (req, res) => {
-        var users = [
-            {
-                firstname: 'Jordan',
-                name: 'Sinou',
-                age: '24'
-            },
-            {
-                firstname: 'jo',
-                name: 'si',
-                age: '14'
-            },
-            {
-                firstname: 'john',
-                name: 'doe',
-                age: '34'
+    authors: (req, res) => {
+        AuthorModel.find({}, (err, users) => {
+            if (err) {
+                res.status(500).send(err)
             }
-        ]
-        res.status(200).render('users', {
-            users
+            else {
+                if (!users) {
+                    res.status(404).send('Aucun auteur trouvé')
+                }
+                res.status(200).render('index', {
+                    users
+                })
+            }
         })
     },
-    test: (req, res) => {
-        var users = [
-            {
-                firstname: 'Jordan',
-                name: 'Sinou',
-                age: '24'
-            },
-            {
-                firstname: 'jo',
-                name: 'si',
-                age: '14'
-            },
-            {
-                firstname: 'john',
-                name: 'doe',
-                age: '34'
-            }
-        ]
-        res.status(200).json({
-            users
-        })
-    },
-    thing: (req, res) => {
+    addAuthor: (req, res) => {
         const Author = new AuthorModel({
             _id: new mongoose.Types.ObjectId(),
-            firstname: 'Jordan',
-            lastname: 'Sinou'
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
         })
-
-        const Thing = new ThingModel({
-            name: req.body.name,
-            description: req.body.description,
-            authors: Author._id
-        })
-
-        Author.save( (err, author) => {
+        Author.save((err, author) => {
             if (err) {
-                res.status(500).json({
+                res.status(500).render('error', {
                     error: err
                 })
             } else {
-                Thing.save((err, thing) => {
+                res.status(200).redirect('/author')
+            }
+        })
+    },
+    addThing: (req, res) => {
+        AuthorModel.findById(req.body.author, (err, author) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                const thing = new ThingModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    name: req.body.name,
+                    description: req.body.description,
+                    author: author.id
+                })
+                thing.save((err, thing) => {
                     if (err) {
-                        res.status(500).json({
-                            message: 'Error when saving the thing',
-                            error: err.message
+                        res.status(500).render('error', {
+                            error: err
                         })
                     } else {
-                        res.status(200).json({
-                            message: 'Saved',
-                            thing
-                        })
+                        res.status(200).redirect('/thing')
                     }
                 })
             }
         })
     },
     getThings: (req, res) => {
-        ThingModel.find({}, (err, things) => {
+        AuthorModel.find({}, (err, authors) => {
             if (err) {
-                res.status(500).json({
-                    message: 'Error when getting things',
-                    error: err.message
-                })
-            } else {
-                res.status(200).json({
-                    message: 'Things retrieved',
-                    things
+                res.status(500).send(err)
+            }
+            else {
+                if (!authors) {
+                    res.status(404).send('Aucun auteur trouvé')
+                }
+                ThingModel.find({}, (err, things) => {
+                    if (err) {
+                        res.status(500).render('error', {
+                            message: 'Error when getting things',
+                            error: err.message
+                        })
+                    } else {
+                        res.status(200).render('things', {
+                            message: 'Things retrieved',
+                            things,
+                            authors
+                        })
+                    }
                 })
             }
         })
+        
     },
     getThingById: (req, res) => {
         ThingModel.findById(req.params.id, (err, thing) => {
@@ -125,5 +115,4 @@ module.exports = {
             })
         })
     }
-
 }
